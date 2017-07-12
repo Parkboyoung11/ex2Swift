@@ -9,7 +9,8 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
+    @IBOutlet weak var btnMale: UIButton!
+    @IBOutlet weak var btnFemale: UIButton!
     @IBOutlet weak var txtFirstName: UITextField!
     @IBOutlet weak var txtLastName: UITextField!
     @IBOutlet weak var txtKata1: UITextField!
@@ -19,7 +20,20 @@ class ViewController: UIViewController {
     @IBOutlet weak var txtMonth: UITextField!
     @IBOutlet weak var txtYear: UITextField!
     @IBOutlet weak var txtPhone: UITextField!
-
+    
+    var gender : String = ""
+    
+    @IBAction func btnCheckMale(_ sender: Any) {
+        btnMale.setImage(UIImage.init(named: "check"), for: .normal)
+        btnFemale.setImage(UIImage.init(named: "uncheck"), for: .normal)
+        gender = "Male"
+    }
+    
+    @IBAction func btnCheckFemale(_ sender: Any) {
+        btnFemale.setImage(UIImage.init(named: "check"), for: .normal)
+        btnMale.setImage(UIImage.init(named: "uncheck"), for: .normal)
+        gender = "Female"
+    }
     
     @IBAction func btnRegister(_ sender: Any) {
         let name : String = txtFirstName.text! + " " + txtLastName.text!
@@ -38,14 +52,14 @@ class ViewController: UIViewController {
             present(noti, animated: true, completion: nil)
         }
         
-        if name == "" || kata == "" || time == "" || phone == "" || mail == "" {
+        if name == "" || kata == "" || time == "" || phone == "" || mail == "" || gender == "" {
             let noti = UIAlertController(title: "Warning", message: "Please fill all !", preferredStyle: .alert)
             let btn = UIAlertAction(title: "OK", style: .default, handler: nil)
             noti.addAction(btn)
             present(noti, animated: true, completion: nil)
         }
         else{
-            let message = name + "\n" + kata + "\n" + mail + "\n" + time + "\n" + phone
+            let message = name + "\n" + kata + "\n" + mail + "\n" + time + "\n" + gender + "\n" + phone
             let registed = UIAlertController(title: "Succeeded" , message: message, preferredStyle: UIAlertControllerStyle.alert)
             registed.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(registed, animated: true, completion: nil)
@@ -58,6 +72,9 @@ class ViewController: UIViewController {
             txtYear.text = ""
             txtPhone.text = ""
             txtEmail.text = ""
+            btnFemale.setImage(UIImage.init(named: "uncheck"), for: .normal)
+            btnMale.setImage(UIImage.init(named: "uncheck"), for: .normal)
+            gender = ""
         }
     }
     
