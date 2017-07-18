@@ -6,6 +6,12 @@ extension String{
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailTest.evaluate(with: mail)
     }
+    
+    func checkKataKana(kata: String) -> Bool{
+        let kataRegEx = "[ァ-ンー]+\\・+[ァ-ンー]{2,}"
+        let kataTest = NSPredicate(format: "SELF MATCHES %@", kataRegEx)
+        return kataTest.evaluate(with: kata)
+    }
 }
 
 extension UIViewController {
@@ -20,9 +26,10 @@ extension UIViewController {
     }
 }
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var btnMale: UIButton!
     @IBOutlet weak var btnFemale: UIButton!
+    
     @IBOutlet weak var txtFirstName: UITextField!
     @IBOutlet weak var txtLastName: UITextField!
     @IBOutlet weak var txtKata1: UITextField!
@@ -38,7 +45,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         creatDatePicker()
+        creatDoneButton4Keyboard()
         self.hideKeyboardWhenTappedAround()
+        self.txtPhone.delegate = self
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
+        let allowedCharacters = CharacterSet.decimalDigits
+        let characterSet = CharacterSet(charactersIn: string)
+        return allowedCharacters.isSuperset(of: characterSet)
     }
     
     func creatDatePicker(){
@@ -65,6 +80,24 @@ class ViewController: UIViewController {
         self.view.endEditing(true)
     }
     
+    func creatDoneButton4Keyboard(){
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(doneisPressed))
+        toolbar.setItems([doneButton], animated: false)
+        txtFirstName.inputAccessoryView = toolbar
+        txtLastName.inputAccessoryView = toolbar
+        txtKata1.inputAccessoryView = toolbar
+        txtKata2.inputAccessoryView = toolbar
+        txtEmail.inputAccessoryView = toolbar
+        txtPhone.inputAccessoryView = toolbar
+    }
+    
+    func doneisPressed(){
+        self.view.endEditing(true)
+    }
+    
     @IBAction func btnCheckMale(_ sender: Any) {
         btnMale.setImage(UIImage.init(named: "check"), for: .normal)
         btnFemale.setImage(UIImage.init(named: "uncheck"), for: .normal)
@@ -79,14 +112,24 @@ class ViewController: UIViewController {
     
     @IBAction func btnRegister(_ sender: Any) {
         let name : String = txtFirstName.text! + " " + txtLastName.text!
-        let kata : String = txtKata1.text! + " " + txtKata2.text!
+        let kata : String = txtKata1.text! + "・" + txtKata2.text!
         let phone : String = txtPhone.text!
         let date : String = txtDate.text!
         
         let mail : String = txtEmail.text!
         let emailChecked = mail.checkEmail(mail: mail)
-        if !emailChecked {
-            let noti = UIAlertController(title: "Warning", message: "Email format isn't correct !", preferredStyle: .alert)
+        let kataChecked = kata.checkKataKana(kata: kata)
+        //print(kata)
+        //print(kataChecked)
+        
+        if !kataChecked{
+            let noti = UIAlertController(title: "Warning", message: "KataKana is not valid!", preferredStyle: .alert)
+            let btn = UIAlertAction(title: "OK", style: .default, handler: nil)
+            noti.addAction(btn)
+            present(noti, animated: true, completion: nil)
+        }
+        else if !emailChecked{
+            let noti = UIAlertController(title: "Warning", message: "Email address is not valid!", preferredStyle: .alert)
             let btn = UIAlertAction(title: "OK", style: .default, handler: nil)
             noti.addAction(btn)
             present(noti, animated: true, completion: nil)
