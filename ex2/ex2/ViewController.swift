@@ -8,7 +8,7 @@ extension String{
     }
     
     func checkKataKana(kata: String) -> Bool{
-        let kataRegEx = "[ァ-ンー]+\\・+[ァ-ンー]{2,}"
+        let kataRegEx = "[ァ-ンー]{0,}"
         let kataTest = NSPredicate(format: "SELF MATCHES %@", kataRegEx)
         return kataTest.evaluate(with: kata)
     }
@@ -112,17 +112,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func btnRegister(_ sender: Any) {
         let name : String = txtFirstName.text! + " " + txtLastName.text!
-        let kata : String = txtKata1.text! + "・" + txtKata2.text!
+        let kata1 : String = txtKata1.text!
+        let kata2 : String = txtKata2.text!
         let phone : String = txtPhone.text!
         let date : String = txtDate.text!
         
         let mail : String = txtEmail.text!
         let emailChecked = mail.checkEmail(mail: mail)
-        let kataChecked = kata.checkKataKana(kata: kata)
+        let kata1Checked = kata1.checkKataKana(kata: kata1)
+        let kata2Checked = kata2.checkKataKana(kata: kata2)
         //print(kata)
         //print(kataChecked)
         
-        if !kataChecked{
+        if !kata1Checked || !kata2Checked{
             let noti = UIAlertController(title: "Warning", message: "KataKana is not valid!", preferredStyle: .alert)
             let btn = UIAlertAction(title: "OK", style: .default, handler: nil)
             noti.addAction(btn)
@@ -134,14 +136,14 @@ class ViewController: UIViewController, UITextFieldDelegate {
             noti.addAction(btn)
             present(noti, animated: true, completion: nil)
         }
-        else if name == "" || kata == "" || phone == "" || mail == "" || gender == "" || date == "" {
+        else if name == "" || kata1 == "" || kata2 == "" || phone == "" || mail == "" || gender == "" || date == "" {
             let noti = UIAlertController(title: "Warning", message: "Please fill all !", preferredStyle: .alert)
             let btn = UIAlertAction(title: "OK", style: .default, handler: nil)
             noti.addAction(btn)
             present(noti, animated: true, completion: nil)
         }
         else{
-            let message = name + "\n" + kata + "\n" + mail + "\n" + date + "\n" + gender + "\n" + phone
+            let message = name + "\n" + kata1 + " " + kata2 + "\n" + mail + "\n" + date + "\n" + gender + "\n" + phone
             let registed = UIAlertController(title: "Succeeded" , message: message, preferredStyle: UIAlertControllerStyle.alert)
             registed.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(registed, animated: true, completion: nil)
