@@ -9,9 +9,11 @@ extension String{
     
     func checkKataKana(kata: String) -> Bool{
         let kataRegEx = "[ァ-ンー]{0,}"
+        //let kataRegEx = "[あ-ん]{0,}"
         let kataTest = NSPredicate(format: "SELF MATCHES %@", kataRegEx)
         return kataTest.evaluate(with: kata)
     }
+
 }
 
 extension UIViewController {
@@ -48,12 +50,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
         creatDoneButton4Keyboard()
         self.hideKeyboardWhenTappedAround()
         self.txtPhone.delegate = self
+        self.txtKata1.delegate = self
+        self.txtKata2.delegate = self
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
-        let allowedCharacters = CharacterSet.decimalDigits
-        let characterSet = CharacterSet(charactersIn: string)
-        return allowedCharacters.isSuperset(of: characterSet)
+        if textField == txtPhone {
+            let allowedCharacters = CharacterSet.decimalDigits
+            let characterSet = CharacterSet(charactersIn: string)
+            return allowedCharacters.isSuperset(of: characterSet)
+        }
+
+        return string.checkKataKana(kata: string)
     }
     
     func creatDatePicker(){
@@ -119,18 +127,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
         
         let mail : String = txtEmail.text!
         let emailChecked = mail.checkEmail(mail: mail)
-        let kata1Checked = kata1.checkKataKana(kata: kata1)
-        let kata2Checked = kata2.checkKataKana(kata: kata2)
+        //let kata1Checked = kata1.checkKataKana(kata: kata1)
+        //let kata2Checked = kata2.checkKataKana(kata: kata2)
         //print(kata)
         //print(kataChecked)
         
-        if !kata1Checked || !kata2Checked{
-            let noti = UIAlertController(title: "Warning", message: "KataKana is not valid!", preferredStyle: .alert)
-            let btn = UIAlertAction(title: "OK", style: .default, handler: nil)
-            noti.addAction(btn)
-            present(noti, animated: true, completion: nil)
-        }
-        else if !emailChecked{
+        //if !kata1Checked || !kata2Checked{
+        //    let noti = UIAlertController(title: "Warning", message: "KataKana is not valid!", preferredStyle: .alert)
+        //    let btn = UIAlertAction(title: "OK", style: .default, handler: nil)
+        //    noti.addAction(btn)
+        //    present(noti, animated: true, completion: nil)
+        //}
+        if !emailChecked{
             let noti = UIAlertController(title: "Warning", message: "Email address is not valid!", preferredStyle: .alert)
             let btn = UIAlertAction(title: "OK", style: .default, handler: nil)
             noti.addAction(btn)
