@@ -1,11 +1,8 @@
 import UIKit
 
-
-
 class ViewController: UIViewController {
     @IBOutlet weak var btnMale: UIButton!
     @IBOutlet weak var btnFemale: UIButton!
-    
     @IBOutlet weak var txtFirstName: UITextField!
     @IBOutlet weak var txtLastName: UITextField!
     @IBOutlet weak var txtKata1: UITextField!
@@ -15,7 +12,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var txtPhone: UITextField!
     
     let datePicker = UIDatePicker()
-    
     var gender : String = ""
     
     override func viewDidLoad() {
@@ -27,8 +23,6 @@ class ViewController: UIViewController {
         self.txtKata1.delegate = self
         self.txtKata2.delegate = self
     }
-    
-    
     
     func creatDatePicker(){
         datePicker.datePickerMode = .date
@@ -88,17 +82,7 @@ class ViewController: UIViewController {
         
         let mail : String = txtEmail.text!
         let emailChecked = mail.checkEmail(mail: mail)
-        //let kata1Checked = kata1.checkKataKana(kata: kata1)
-        //let kata2Checked = kata2.checkKataKana(kata: kata2)
-        //print(kata)
-        //print(kataChecked)
         
-        //if !kata1Checked || !kata2Checked{
-        //    let noti = UIAlertController(title: "Warning", message: "KataKana is not valid!", preferredStyle: .alert)
-        //    let btn = UIAlertAction(title: "OK", style: .default, handler: nil)
-        //    noti.addAction(btn)
-        //    present(noti, animated: true, completion: nil)
-        //}
         if !emailChecked{
             let noti = UIAlertController(title: "Warning", message: "Email address is not valid!", preferredStyle: .alert)
             let btn = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -131,6 +115,8 @@ class ViewController: UIViewController {
     
 }
 
+
+
 extension String{
     func checkEmail(mail: String) -> Bool{
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
@@ -147,6 +133,8 @@ extension String{
     
 }
 
+
+
 extension UIViewController {
     func hideKeyboardWhenTappedAround() {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
@@ -158,6 +146,8 @@ extension UIViewController {
         view.endEditing(true)
     }
 }
+
+
 
 extension ViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
