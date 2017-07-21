@@ -1,34 +1,8 @@
 import UIKit
 
-extension String{
-    func checkEmail(mail: String) -> Bool{
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        return emailTest.evaluate(with: mail)
-    }
-    
-    func checkKataKana(kata: String) -> Bool{
-        let kataRegEx = "[ァ-ンー]{0,}"
-        //let kataRegEx = "[あ-ん]{0,}"
-        let kataTest = NSPredicate(format: "SELF MATCHES %@", kataRegEx)
-        return kataTest.evaluate(with: kata)
-    }
 
-}
 
-extension UIViewController {
-    func hideKeyboardWhenTappedAround() {
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
-    
-    func dismissKeyboard() {
-        view.endEditing(true)
-    }
-}
-
-class ViewController: UIViewController, UITextFieldDelegate {
+class ViewController: UIViewController {
     @IBOutlet weak var btnMale: UIButton!
     @IBOutlet weak var btnFemale: UIButton!
     
@@ -54,27 +28,15 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.txtKata2.delegate = self
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
-        if textField == txtPhone {
-            let allowedCharacters = CharacterSet.decimalDigits
-            let characterSet = CharacterSet(charactersIn: string)
-            return allowedCharacters.isSuperset(of: characterSet)
-        }
-
-        return string.checkKataKana(kata: string)
-    }
+    
     
     func creatDatePicker(){
         datePicker.datePickerMode = .date
-        
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
-        
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(pressDone))
         toolbar.setItems([doneButton], animated: false)
-        
         txtDate.inputAccessoryView = toolbar
-        
         txtDate.inputView = datePicker
     }
     
@@ -91,7 +53,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func creatDoneButton4Keyboard(){
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
-        
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(doneisPressed))
         toolbar.setItems([doneButton], animated: false)
         txtFirstName.inputAccessoryView = toolbar
@@ -168,5 +129,45 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+}
+
+extension String{
+    func checkEmail(mail: String) -> Bool{
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluate(with: mail)
+    }
+    
+    func checkKataKana(kata: String) -> Bool{
+        let kataRegEx = "[ァ-ンー]{0,}"
+        //let kataRegEx = "[あ-ん]{0,}"
+        let kataTest = NSPredicate(format: "SELF MATCHES %@", kataRegEx)
+        return kataTest.evaluate(with: kata)
+    }
+    
+}
+
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}
+
+extension ViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
+        if textField == txtPhone {
+            let allowedCharacters = CharacterSet.decimalDigits
+            let characterSet = CharacterSet(charactersIn: string)
+            return allowedCharacters.isSuperset(of: characterSet)
+        }
+        
+        return string.checkKataKana(kata: string)
+    }
 }
 
